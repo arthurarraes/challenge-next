@@ -25,17 +25,19 @@ export default function Login() {
             setErro('Todos os campos devem ser preenchidos.');
             return;
         }
-        
+
         try {
-            await login(logar);
-            if (!error) { // Verifica se não houve erro no login
-                setLogar({ email: "", senha: "" });
-                router.push('/');
+            setErro(''); // Limpa o erro antes de tentar logar
+            await login(logar); // Faz o login
+            
+            if (!error) { // Se não houver erro após o login
+                router.push('/'); // Redireciona para a home
             } else {
-                setErro(error); // Define o erro vindo do AuthContext
+                setErro(error); // Define o erro caso login falhe
             }
         } catch (err) {
             console.error(err);
+            setErro('Erro ao tentar fazer login.');
         }
     };
 

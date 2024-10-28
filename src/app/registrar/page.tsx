@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 export default function Registrar() {
     const { register, error } = useContext(AuthContext);
     const router = useRouter();
-    const [erro, setErro] = useState<string>()
+    const [erro, setErro] = useState<string>("")
     const [registro, setRegistro] = useState({ userName: "", cep: "", telefone: "", email: "", senha: "" });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,7 +26,7 @@ export default function Registrar() {
         try {
             await register(registro);
             setRegistro({ userName: "", cep: "", telefone: "", email: "", senha: "" });
-            if(error == ''){
+            if(error == ''  && erro == ""){
                 router.push('/')
             }
         } catch (err) {

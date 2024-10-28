@@ -26,20 +26,32 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const login = async (credentials: { email: string; senha: string }) => {
         setError(null);
-
+    
         try {
             const loginResponse = await fetch('http://localhost:8080/usuarios/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(credentials),
             });
-
+    
             if (!loginResponse.ok) {
                 const errorMessage = await loginResponse.text();
-                setError(`Erro ao fazer login: ${errorMessage}`);
+                if (loginResponse.status === 400) {
+                    setError('Credenciais inválidas. Verifique o email e a senha.');
+                } else if (loginResponse.status === 401) {
+                    setError('Credenciais inválidas. Verifique o email e a senha.');
+                } else if (loginResponse.status === 403) {
+                    setError('Acesso proibido. Entre em contato com o suporte.');
+                } else if (loginResponse.status === 404) {
+                    setError('Usuário não encontrado.');
+                } else if (loginResponse.status === 500) {
+                    setError('Erro no servidor. Tente novamente mais tarde.');
+                } else {
+                    setError(`Erro desconhecido: ${errorMessage}`);
+                }
                 return;
             }
-
+    
             const userData = await loginResponse.json();
             const userFiltered: UserProps = {
                 cep: userData.cep,
@@ -48,12 +60,13 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 senha: userData.senha,
                 userName: userData.userName
             };
-
+    
             setUser(userFiltered);
         } catch (error) {
             setError('Erro de conexão. Verifique sua rede e tente novamente.');
         }
     };
+    
 
     const register = async (userData: UserProps) => {
         setError(null);
