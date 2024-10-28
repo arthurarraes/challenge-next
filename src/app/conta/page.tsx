@@ -111,8 +111,8 @@ export default function Conta() {
           <div id="erro" className="text-red-500 mb-2"></div>
           <input type="text" id="Marca" placeholder="Marca" className="p-2 border rounded mb-2" />
           <input type="text" id="Modelo" placeholder="Modelo" className="p-2 border rounded mb-2" />
-          <input type="text" id="Placa" placeholder="Placa" className="p-2 border rounded mb-2" />
-          <input type="text" id="Ano" placeholder="Ano" className="p-2 border rounded mb-4" />
+          <input type="text" id="Placa" minLength={7} maxLength={7} placeholder="Placa" className="p-2 border rounded mb-2" />
+          <input type="text" id="Ano" minLength={4} maxLength={4} placeholder="Ano" className="p-2 border rounded mb-4" />
           <input
             type="button"
             value="Adicionar"

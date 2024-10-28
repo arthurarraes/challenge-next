@@ -6,6 +6,7 @@ import React from "react";
 import Login from "./login/page";
 import Register from "./registrar/page";
 import Footer from "@/components/Footer";
+import { AuthProvider } from "./context";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -35,9 +36,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        {!isAuthPage && <Header />}
-        {children}
-        {!isAuthPage && <Footer/>}
+        <AuthProvider>
+          {!isAuthPage && <Header />}
+          {children}
+          {!isAuthPage && <Footer/>}
+        </AuthProvider>
       </body>
     </html>
   );

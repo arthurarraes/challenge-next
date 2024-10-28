@@ -1,45 +1,50 @@
 'use client'
 
 import Link from "next/link";
+import { useContext, useState } from "react";
+import { AuthContext } from "../context";
+import { useRouter } from "next/navigation";
 
 export default function Registrar() {
-    function login(event: Event) {
-        event.preventDefault(); // Evita o envio do formulário
+    const { register, error } = useContext(AuthContext);
+    const router = useRouter();
+    const [erro, setErro] = useState<string>()
+    const [registro, setRegistro] = useState({ userName: "", cep: "", telefone: "", email: "", senha: "" });
 
-        const campos = ['nome', 'cep', 'telefone', 'email', 'senha'];
-        let valido = true;
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setRegistro({ ...registro, [name]: value });
+    };
 
-        campos.forEach(campoId => {
-            const elemento = document.getElementById(campoId) as HTMLInputElement;
-            if (!elemento.value.trim()) {
-                elemento.classList.add('bg-red-100', 'border-red-500'); // Erro de input
-                valido = false;
-            } else {
-                elemento.classList.remove('bg-red-100', 'border-red-500');
-            }
-        });
-
-        const erroElement = document.getElementById('erro');
-        if (!valido) {
-            if (erroElement) erroElement.textContent = 'Todos os campos devem ser preenchidos.';
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const { userName, cep, telefone, email, senha } = registro;
+        if (!userName || !cep || !telefone || !email || !senha) {
+            setErro('Todos os campos devem ser preenchidos.');
             return;
         }
-
-        localStorage.setItem('Logado', 'True');
-        window.location.href = '/';
-    }
+        try {
+            await register(registro);
+            setRegistro({ userName: "", cep: "", telefone: "", email: "", senha: "" });
+            if(error == ''){
+                router.push('/')
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    };
 
     return (
         <div className="bg-blue-500 flex justify-center items-center h-screen">
             <section className="bg-white rounded-lg p-8 m-5 w-2/5 flex flex-col items-center">
                 <header className="text-2xl font-bold">Registrar</header>
-                <form className="w-full mt-5 flex flex-col items-center" onSubmit={(e) => login(e.nativeEvent)}>
-                    <div id="erro" className="text-red-500 text-sm mt-2"></div>
-                    <input type="text" id="nome" placeholder="Nome Completo" className="m-2 w-4/5 p-2 rounded-lg border border-gray-300" />
-                    <input type="text" id="cep" placeholder="CEP" className="m-2 w-4/5 p-2 rounded-lg border border-gray-300" />
-                    <input type="tel" id="telefone" placeholder="Telefone" className="m-2 w-4/5 p-2 rounded-lg border border-gray-300" />
-                    <input type="email" id="email" placeholder="Email" className="m-2 w-4/5 p-2 rounded-lg border border-gray-300" />
-                    <input type="password" id="senha" placeholder="Senha" className="m-2 w-4/5 p-2 rounded-lg border border-gray-300" />
+                <form className="w-full mt-5 flex flex-col items-center" onSubmit={handleSubmit}>
+                    <div id="erro" className="text-red-500 mt-2">{erro || error}</div>
+                    <input type="text" name="userName" placeholder="Nome Completo" className="m-2 w-4/5 p-2 rounded-lg border border-gray-300" value={registro.userName} onChange={handleChange} />
+                    <input type="text" minLength={8} maxLength={8} name="cep" placeholder="CEP" className="m-2 w-4/5 p-2 rounded-lg border border-gray-300" value={registro.cep} onChange={handleChange} />
+                    <input type="text" maxLength={11} name="telefone" placeholder="Telefone" className="m-2 w-4/5 p-2 rounded-lg border border-gray-300" value={registro.telefone} onChange={handleChange} />
+                    <input type="email" name="email" placeholder="Email" className="m-2 w-4/5 p-2 rounded-lg border border-gray-300" value={registro.email} onChange={handleChange} />
+                    <input type="password" name="senha" placeholder="Senha" className="m-2 w-4/5 p-2 rounded-lg border border-gray-300" value={registro.senha} onChange={handleChange} />
                     <input type="submit" value="Registrar" className="bg-blue-500 text-white text-lg w-4/5 mt-4 py-2 rounded-lg" />
                 </form>
                 <Link href='/login' className="mt-4">

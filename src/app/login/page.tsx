@@ -1,52 +1,60 @@
 'use client';
 
 import Link from "next/link";
+import { useContext, useState } from "react";
+import { AuthContext } from "../context";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
-    function handleLogin(event: Event) {
-        event.preventDefault(); // Evita o envio do formulário
+    const {login, error} = useContext(AuthContext)
+    const router = useRouter();
+    const [logar, setLogar] = useState({email: '', senha: ''})
+    const [erro, setErro] = useState<string>()
 
-        // Obtém todos os campos de entrada
-        const campos = ['email', 'senha'];
-        let valido = true;
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setLogar({ ...logar, [name]: value });
+    };
 
-        campos.forEach(campoId => {
-            const elemento = document.getElementById(campoId) as HTMLInputElement;
-            if (!elemento.value.trim()) {
-                elemento.classList.add('bg-red-100', 'border-red-500'); // Erro de input
-                valido = false;
-            } else {
-                elemento.classList.remove('bg-red-100', 'border-red-500');
-            }
-        });
-
-        const erroElement = document.getElementById('erro');
-        if (!valido) {
-            if (erroElement) erroElement.textContent = 'Todos os campos devem ser preenchidos.';
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const { email, senha } = logar;
+        if (!email || !senha) {
+            setErro('Todos os campos devem ser preenchidos.');
             return;
         }
-
-        localStorage.setItem('Logado', 'True');
-        window.location.href = '/';
-    }
+        try {
+            await login(logar);
+            setLogar({email: "", senha: "" });
+            if(error == ''){
+                router.push('/')
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    };
 
     return (
         <main className="bg-blue-500 flex justify-center items-center h-screen">
             <section className="bg-white rounded-lg p-8 m-3 w-2/5 flex flex-col items-center">
                 <header className="text-2xl font-bold">Login</header>
-                <form className="w-full mt-5 flex flex-col items-center" onSubmit={(e) => handleLogin(e.nativeEvent)}>
-                    <div id="erro" className="text-red-500 text-sm mt-2"></div>
+                <form className="w-full mt-5 flex flex-col items-center" onSubmit={handleSubmit}>
+                    <div id="erro" className="text-red-500 mt-2">{erro || error}</div>
                     <input
                         type="email"
                         id="email"
+                        name="email"
                         placeholder="Email"
                         className="m-2 w-4/5 p-2 rounded-lg border border-gray-300"
+                        onChange={handleChange}
                     />
                     <input
                         type="password"
                         id="senha"
+                        name="senha"
                         placeholder="Senha"
                         className="m-2 w-4/5 p-2 rounded-lg border border-gray-300"
+                        onChange={handleChange}
                     />
                     <input
                         type="submit"
