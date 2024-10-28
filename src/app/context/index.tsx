@@ -57,7 +57,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const register = async (userData: UserProps) => {
         setError(null);
-
+        console.log(userData)
         try {
             const registerResponse = await fetch('http://localhost:8080/usuarios/cadastro', {
                 method: 'POST',
@@ -87,8 +87,8 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     const logout = () => {
-        setUser(null);
-        setError(null);
+        setUser({ userName: "", cep: "", telefone: "", email: "", senha: "" })
+        setError("");
     };
 
     return (

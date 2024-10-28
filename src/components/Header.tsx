@@ -4,10 +4,12 @@ import Link from "next/link";
 import Image from 'next/image'
 import { FaUser } from "react-icons/fa";
 import logo from "../assets/logo.svg"
+import { useContext } from "react";
+import { AuthContext } from "@/app/context";
 
 
 export default function Header(){
-    const estaLogado = localStorage.getItem('Logado') === 'True'
+    const {user} = useContext(AuthContext)
     return(
         <header className="flex bg-[var(--light-blue)] font-sora p-4 justify-around items-center text-3xl font-bold">
             <Link href={'/'}>
@@ -25,8 +27,8 @@ export default function Header(){
                     <a className="no-underline m-2 text-lg text-black" href=""><Link href={'/#ajuda'}>Ajuda</Link></a>
                 </ul>
             </nav>
-            {estaLogado ? (
-                <div>
+            {user?.email !== "" ? (
+                <div className="text-blue-500">
                     <Link href='/conta'><FaUser size={28}/></Link>
                 </div>
             ): (

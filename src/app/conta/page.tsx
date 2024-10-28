@@ -2,13 +2,34 @@
 
 import Link from "next/link";
 import Modal from "./Modal";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FaTrashAlt } from "react-icons/fa"; // Importando ícone
+import { AuthContext, UserProps } from "../context";
+
+type VeiculoProps = {
+  ano: number;
+  id: number;
+  marca: string;
+  modelo: string;
+  placa: string;
+};
 
 export default function Conta() {
   const [open, setOpen] = useState(false);
   const [idDelete, setIdDelete] = useState(0);
   const [formElements, setFormElements] = useState<HTMLFormElement[]>([]); // Para armazenar os formulários dos carros
+
+  const handleDelete = () => {
+    const formToRemove = formElements[idDelete];
+    formToRemove.remove(); // Remove o formulário correspondente
+    setFormElements((prev) => prev.filter((_, index) => index !== idDelete)); // Atualiza o estado
+    setOpen(false); // Fecha o modal
+  };
+
+  const idModal = (id: number) => {
+    setOpen(true);
+    setIdDelete(id);
+  };
 
   // Função para adicionar um novo carro
   function adicionarCarro() {
@@ -63,24 +84,30 @@ export default function Conta() {
       if (!anoElement.value) anoElement.classList.add('bg-red-100', 'border-red-500');
     }
   }
+  
+  const [veiculos,setVeiculos] = useState<VeiculoProps[]>()
+  const {user, logout, error} = useContext(AuthContext)
 
-  function sair() {
-    localStorage.setItem('Logado', 'False');
-    window.location.reload();
-    window.location.href = '/';
-  }
+  useEffect(() => {
+    const chamadaApi = async () => {
+      if (user?.email) {
+        try {
+          const response = await fetch(`http://localhost:8080/veiculos/listar/${user.email}`);
+          const data: VeiculoProps[] = await response.json();
+          setVeiculos(data);
+        } catch (error) {
+          console.error("Erro ao buscar veículos:", error);
+        }
+      }
+    };
+    chamadaApi();
+  }, [user?.email]);
 
-  const handleDelete = () => {
-    const formToRemove = formElements[idDelete];
-    formToRemove.remove(); // Remove o formulário correspondente
-    setFormElements((prev) => prev.filter((_, index) => index !== idDelete)); // Atualiza o estado
-    setOpen(false); // Fecha o modal
-  };
-
-  const idModal = (id: number) => {
-    setOpen(true);
-    setIdDelete(id);
-  };
+  const [veiculo, setVeiculo] = useState<VeiculoProps>({ano: 1000,
+    id: 0,
+    marca: "",
+    modelo: "",
+    placa: ""})
 
   return (
     <section className="grid grid-cols-1 md:grid-cols-2 gap-8 p-8">
@@ -88,17 +115,17 @@ export default function Conta() {
         <header className="text-lg font-bold mb-4">Perfil</header>
         <form className="flex flex-col">
           <label>Nome Completo</label>
-          <input type="text" placeholder="João Silva" className="p-2 border rounded mb-2" />
+          <input type="text" placeholder="João Silva" className="p-2 border rounded mb-2" value={user?.userName}/>
           <label>Cep</label>
-          <input type="text" placeholder="01234-560" className="p-2 border rounded mb-2" />
+          <input type="text" placeholder="01234-560" className="p-2 border rounded mb-2" value={user?.cep}/>
           <label>Telefone</label>
-          <input type="tel" placeholder="11 99999-9999" className="p-2 border rounded mb-2" />
+          <input type="tel" placeholder="11 99999-9999" className="p-2 border rounded mb-2" value={user?.telefone}/>
           <label>Email</label>
-          <input type="email" placeholder="teste@email.com" className="p-2 border rounded mb-2" />
+          <input type="email" placeholder="teste@email.com" className="p-2 border rounded mb-2"value={user?.email}/>
           <label>Senha</label>
-          <input type="password" placeholder="******" className="p-2 border rounded mb-4" />
+          <input type="password" placeholder="******" className="p-2 border rounded mb-4" value={user?.senha}/>
           <Link href="/">
-            <button type="button" className="bg-blue-500 text-white p-2 rounded w-full" onClick={sair}>
+            <button type="button" className="bg-blue-500 text-white p-2 rounded w-full" onClick={logout}>
               Sair
             </button>
           </Link>
@@ -120,7 +147,23 @@ export default function Conta() {
             className="bg-blue-500 text-white p-2 rounded cursor-pointer"
           />
         </form>
-        <div id="carro" className="m-2"></div>
+        <div>
+          {veiculos?.map((veiculo, index) => (
+            <form key={veiculo.id} className="flex flex-col mb-4 p-4 border rounded-lg bg-gray-50 shadow-md">
+              <label className="mt-2">Marca</label>
+              <input type="text" value={veiculo.marca} readOnly className="p-2 border rounded" />
+              <label className="mt-2">Modelo</label>
+              <input type="text" value={veiculo.modelo} readOnly className="p-2 border rounded" />
+              <label className="mt-2">Placa</label>
+              <input type="text" value={veiculo.placa} readOnly className="p-2 border rounded" />
+              <label className="mt-2">Ano</label>
+              <input type="text" value={veiculo.ano.toString()} readOnly className="p-2 border rounded" />
+              <button type="button" className="mt-2 bg-red-500 text-white p-2 rounded" onClick={() => idModal(index)}>
+                Remover
+              </button>
+            </form>
+          ))}
+        </div>
       </section>
 
       <Modal open={open} onClose={() => setOpen(false)}>
