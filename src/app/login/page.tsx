@@ -1,39 +1,53 @@
 'use client';
 
 import Link from "next/link";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../context";
 import { useRouter } from "next/navigation";
 
 export default function Login() {
-    const { login, error } = useContext(AuthContext);
+    const { login, error, user } = useContext(AuthContext); 
     const router = useRouter();
     const [logar, setLogar] = useState({ email: '', senha: '' });
     const [erro, setErro] = useState<string>();
 
+    useEffect(() => {
+        if (user) { // Redireciona apenas se o usuário estiver logado com sucesso
+            router.push('/');
+        }
+    }, [user, router]);
+
+    useEffect(() => {
+        setErro("");
+        console.log(error)
+    }, []);
+
+    // useEffect(() => {
+    //     if (error) {
+    //         setErro(error); // Atualiza o erro quando o contexto for atualizado
+    //     }
+    // }, [error]);
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setLogar({ ...logar, [name]: value });
-        setErro(''); // Limpa o erro ao digitar nos campos
+        setErro(""); // Limpa o erro ao digitar nos campos
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const { email, senha } = logar;
-        
+
         if (!email || !senha) {
             setErro('Todos os campos devem ser preenchidos.');
             return;
         }
 
         try {
-            setErro(''); // Limpa o erro antes de tentar logar
+            setErro(""); // Limpa o erro antes de tentar logar
             await login(logar); // Faz o login
-            
-            if (!error) { // Se não houver erro após o login
-                router.push('/'); // Redireciona para a home
-            } else {
-                setErro(error); // Define o erro caso login falhe
+            if (error) {
+                setErro(error); // Atualiza o erro quando o contexto for atualizado
             }
         } catch (err) {
             console.error(err);

@@ -27,7 +27,7 @@ export default function Header(){
                     <a className="no-underline m-2 text-lg text-black" href=""><Link href={'/#ajuda'}>Ajuda</Link></a>
                 </ul>
             </nav>
-            {user?.email !== "" ? (
+            {user?.email ? (
                 <div className="text-blue-500">
                     <Link href='/conta'><FaUser size={28}/></Link>
                 </div>
