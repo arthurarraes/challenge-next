@@ -64,6 +64,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             setUser(userFiltered);
         } catch (error) {
             setError('Erro de conexão. Verifique sua rede e tente novamente.');
+            console.log(error)
         }
     };
     
@@ -96,6 +97,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             setUser(newUser);
         } catch (error) {
             setError('Erro de conexão. Verifique sua rede e tente novamente.');
+            console.log(error)
         }
     };
 

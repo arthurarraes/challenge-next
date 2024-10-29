@@ -4,7 +4,7 @@ import Link from "next/link";
 import Modal from "./Modal";
 import { useContext, useEffect, useState } from "react";
 import { FaTrashAlt } from "react-icons/fa"; // Importando ícone
-import { AuthContext, UserProps } from "../context";
+import { AuthContext } from "../context";
 
 type VeiculoProps = {
   ano: number;
@@ -17,7 +17,6 @@ export default function Conta() {
   const [open, setOpen] = useState(false);
   const [placaDelete, setPlacaDelete] = useState("");
   const [erro, setErro] = useState<string>();
-  const [formElements, setFormElements] = useState<HTMLFormElement[]>([]); // Para armazenar os formulários dos carros
 
   const handleDelete = async () => {
     try {
@@ -150,7 +149,7 @@ export default function Conta() {
         </form>
         <div className="pt-3">
           {veiculos?.map((veiculo, index) => (
-            <form className="flex flex-col mb-4 p-4 border rounded-lg bg-gray-50 shadow-md">
+            <form key={index} className="flex flex-col mb-4 p-4 border rounded-lg bg-gray-50 shadow-md">
               <label className="mt-2">Marca</label>
               <input type="text" value={veiculo.marca} readOnly className="p-2 border rounded" />
               <label className="mt-2">Modelo</label>
