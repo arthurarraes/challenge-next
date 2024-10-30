@@ -120,11 +120,11 @@ export default function Conta() {
           <label>Cep</label>
           <input type="text" placeholder={user?.cep} className="p-2 border rounded mb-2" value={user?.cep}/>
           <label>Telefone</label>
-          <input type="tel" placeholder="11 99999-9999" className="p-2 border rounded mb-2" value={user?.telefone}/>
+          <input type="tel" placeholder={user?.telefone} className="p-2 border rounded mb-2" value={user?.telefone}/>
           <label>Email</label>
-          <input type="email" placeholder="teste@email.com" className="p-2 border rounded mb-2"value={user?.email}/>
+          <input type="email" placeholder={user?.email} className="p-2 border rounded mb-2"value={user?.email}/>
           <label>Senha</label>
-          <input type="password" placeholder="******" className="p-2 border rounded mb-4" value={user?.senha}/>
+          <input type="password" placeholder={user?.senha} className="p-2 border rounded mb-4" value={user?.senha}/>
           <Link href="/">
             <button type="button" className="bg-blue-500 text-white p-2 rounded w-full" onClick={logout}>
               Sair

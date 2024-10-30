@@ -57,10 +57,10 @@ export default function Login() {
 
     return (
         <main className="bg-blue-500 flex justify-center items-center h-screen">
-            <section className="bg-white rounded-lg p-8 m-3 w-2/5 flex flex-col items-center">
+            <section className="bg-white rounded-lg p-8 m-3 w-9/12 md:w-2/5 flex flex-col items-center">
                 <header className="text-2xl font-bold">Login</header>
                 <form className="w-full mt-5 flex flex-col items-center" onSubmit={handleSubmit}>
-                    <div id="erro" className="text-red-500 mt-2">{erro}</div>
+                    <div id="erro" className="text-red-500 mt-2 text-center">{erro}</div>
                     <input
                         type="email"
                         id="email"
@@ -86,7 +86,7 @@ export default function Login() {
                     />
                 </form>
                 <Link href="/registrar" className="mt-4">
-                    <p>Você não possui uma conta? <span className="text-blue-500">Registrar</span></p>
+                    <p className="text-sm text-center">Você não possui uma conta? <span className="text-blue-500">Registrar</span></p>
                 </Link>
             </section>
         </main>

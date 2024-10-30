@@ -41,11 +41,11 @@ export default function DuvidasFrequentes() {
 
     return (
         <section id="ajuda" className="bg-gray-200 p-5 text-center">
-            <header className="text-xl font-bold">Dúvidas Frequentes</header>
+            <header className="text-lg md:text-xl font-bold">Dúvidas Frequentes</header>
             {duvidasFrequentes.map((i, index) => (
                 <div className="my-2 flex flex-col items-center gap-2 p-2 border-b border-gray-300" key={i.id}>
                     <div className="flex items-center">
-                        <h1 className="font-open-sans text-lg font-semibold">{i.pergunta}</h1>
+                        <h1 className="font-open-sans md:text-lg font-semibold">{i.pergunta}</h1>
                         <button onClick={() => aparecerResposta(index)} className="ml-2 border-0">
                         <FaChevronDown
                                 className={`transition-transform duration-300 ${respostasVisiveis[index] ? 'transform rotate-180' : ''}`}
@@ -53,7 +53,7 @@ export default function DuvidasFrequentes() {
                         </button>
                     </div>
                     {respostasVisiveis[index] && (
-                        <h1 className="font-medium text-base">{i.resposta}</h1>
+                        <h1 className="text-sm md:text-base">{i.resposta}</h1>
                     )}
                 </div>
             ))}

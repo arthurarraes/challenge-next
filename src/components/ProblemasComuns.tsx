@@ -14,9 +14,9 @@ export default function ProblemasComuns() {
         <section className="my-12 mx-4">
             <header className="font-bold text-center text-2xl">Problemas Comuns</header>
 
-            <div className="my-5 mx-7 grid grid-cols-2 gap-10 items-center justify-center">
+            <div className="my-5 mx-auto grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-10 items-center justify-center">
                 {problemas.map((e) => (
-                    <div key={e.id} className="rounded-lg flex flex-col items-center justify-center text-center p-5 shadow-lg">
+                    <div key={e.id} className=" w-2/3 md:w-3/4 mx-auto rounded-lg flex flex-col items-center justify-center text-center p-5 shadow-lg">
                         <h1 className="font-open-sans text-lg font-semibold">{e.problema}</h1>
                         <button className="px-2 py-1 bg-white border-blue-500 border rounded-lg my-2">
                             <a href={e.link} target="_blank" rel="noopener noreferrer" className="text-blue-500 font-sora text-base">

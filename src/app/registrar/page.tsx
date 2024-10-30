@@ -46,9 +46,9 @@ export default function Registrar() {
 
     return (
         <div className="bg-blue-500 flex justify-center items-center h-screen">
-            <section className="bg-white rounded-lg p-8 m-5 w-2/5 flex flex-col items-center">
+            <section className="bg-white rounded-lg py-5 m-5 w-9/12 md:w-3/6 flex flex-col items-center">
                 <header className="text-2xl font-bold">Registrar</header>
-                <form className="w-full mt-5 flex flex-col items-center" onSubmit={handleSubmit}>
+                <form className="w-full mt-2 flex flex-col items-center" onSubmit={handleSubmit}>
                     <div id="erro" className="text-red-500 mt-2">{erro}</div>
                     <input type="text" name="userName" placeholder="Nome Completo" className="m-2 w-4/5 p-2 rounded-lg border border-gray-300" value={registro.userName} onChange={handleChange} />
                     <input type="text" minLength={9} maxLength={9} name="cep" placeholder="CEP" className="m-2 w-4/5 p-2 rounded-lg border border-gray-300" value={registro.cep} onChange={handleChange} />
@@ -58,7 +58,7 @@ export default function Registrar() {
                     <input type="submit" value="Registrar" className="bg-blue-500 text-white text-lg w-4/5 mt-4 py-2 rounded-lg" />
                 </form>
                 <Link href='/login' className="mt-4">
-                    <p>Você já possui uma conta? <span className="text-blue-500">Entrar</span></p>
+                    <p className="text-sm">Você já possui uma conta? <span className="text-blue-500">Entrar</span></p>
                 </Link>
             </section>
         </div>

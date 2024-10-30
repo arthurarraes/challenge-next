@@ -7,15 +7,13 @@ export default function Footer(){
             <figure>
             <Image
                 src={logo}
-                width={300} 
-                height={71}
-                alt="Logo"/>
+                alt="Logo"  className=" w-5/6 md:w-full mx-auto"/>
             </figure>
             <div>
-                <p className='font-open-sans text-md font-normal'>Challenge FIAP - 2024</p>
-                <p className='font-open-sans text-md font-normal'>Arthur Arraes</p>
-                <p className='font-open-sans text-md font-normal'>Iago Victor</p>
-                <p className='font-open-sans text-md font-normal'>Willian Moreira</p>
+                <p className='font-open-sans text-sm md:text-base font-normal'>Challenge FIAP - 2024</p>
+                <p className='font-open-sans text-sm md:text-base font-normal'>Arthur Arraes</p>
+                <p className='font-open-sans text-sm md:text-base font-normal'>Iago Victor</p>
+                <p className='font-open-sans text-sm md:text-base font-normal'>Willian Moreira</p>
             </div>
         </footer>
     
