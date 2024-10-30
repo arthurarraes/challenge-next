@@ -51,7 +51,7 @@ export default function Registrar() {
                 <form className="w-full mt-5 flex flex-col items-center" onSubmit={handleSubmit}>
                     <div id="erro" className="text-red-500 mt-2">{erro}</div>
                     <input type="text" name="userName" placeholder="Nome Completo" className="m-2 w-4/5 p-2 rounded-lg border border-gray-300" value={registro.userName} onChange={handleChange} />
-                    <input type="text" minLength={8} maxLength={8} name="cep" placeholder="CEP" className="m-2 w-4/5 p-2 rounded-lg border border-gray-300" value={registro.cep} onChange={handleChange} />
+                    <input type="text" minLength={9} maxLength={9} name="cep" placeholder="CEP" className="m-2 w-4/5 p-2 rounded-lg border border-gray-300" value={registro.cep} onChange={handleChange} />
                     <input type="text" maxLength={11} name="telefone" placeholder="Telefone" className="m-2 w-4/5 p-2 rounded-lg border border-gray-300" value={registro.telefone} onChange={handleChange} />
                     <input type="email" name="email" placeholder="Email" className="m-2 w-4/5 p-2 rounded-lg border border-gray-300" value={registro.email} onChange={handleChange} />
                     <input type="password" name="senha" placeholder="Senha" className="m-2 w-4/5 p-2 rounded-lg border border-gray-300" value={registro.senha} onChange={handleChange} />
