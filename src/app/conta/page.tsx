@@ -173,8 +173,8 @@ export default function Conta() {
             onChange={handleChange}
             value={veiculo.placa}
           />
-          <input
-            type="number"
+         <input
+            type="text"
             id="Ano"
             name="ano"
             minLength={4}
