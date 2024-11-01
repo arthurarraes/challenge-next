@@ -1,10 +1,10 @@
 'use client';
 
 import Link from "next/link";
-import Modal from "./Modal";
 import { useContext, useEffect, useState } from "react";
-import { FaTrashAlt } from "react-icons/fa"; // Importando ícone
+import { FaTrashAlt } from "react-icons/fa";
 import { AuthContext } from "../context";
+import Modal from "./Modal";
 
 type VeiculoProps = {
   ano: number;
@@ -17,6 +17,15 @@ export default function Conta() {
   const [open, setOpen] = useState(false);
   const [placaDelete, setPlacaDelete] = useState("");
   const [erro, setErro] = useState<string>();
+  const [veiculos, setVeiculos] = useState<VeiculoProps[]>([])
+  const { user, logout, error } = useContext(AuthContext)
+
+  const [veiculo, setVeiculo] = useState<VeiculoProps>({
+    ano: 0,
+    marca: "",
+    modelo: "",
+    placa: ""
+  })
 
   const handleDelete = async () => {
     try {
@@ -25,13 +34,13 @@ export default function Conta() {
       });
       if (response.ok) {
         alert(`Veículo com placa ${placaDelete} excluído com sucesso!`);
-        setOpen(false); // Fecha o modal
+        setOpen(false);
         const response = await fetch(`http://localhost:8080/veiculos/listar/${user?.email}`);
         const data: VeiculoProps[] = await response.json();
         setVeiculos(data);
       }
       else {
-        const errorData = await response.json(); // Captura a resposta de erro
+        const errorData = await response.json();
         console.error("Erro ao excluir:", errorData);
       }
     } catch (error) {
@@ -43,10 +52,6 @@ export default function Conta() {
     setOpen(true);
     setPlacaDelete(placa);
   };
-
-  
-  const [veiculos,setVeiculos] = useState<VeiculoProps[]>()
-  const {user, logout, error} = useContext(AuthContext)
 
   useEffect(() => {
     const chamadaApi = async () => {
@@ -61,54 +66,56 @@ export default function Conta() {
       }
     };
     chamadaApi();
-  }, []);
+  }, [user?.email]);
 
-  const [veiculo, setVeiculo] = useState<VeiculoProps>({ano: 0,
-    marca: "",
-    modelo: "",
-    placa: ""})
-
-  const handleChange = (e:React.ChangeEvent<HTMLInputElement>)=>{
-    const {name,value} = e.target
-    setVeiculo({...veiculo, [name]:value})}
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setVeiculo({ ...veiculo, [name]: value })
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { ano, marca, modelo, placa } = veiculo;
-        
-    if (!ano || !marca  || !modelo || !placa) {
-        setErro('Todos os campos devem ser preenchidos.');
-        return;
+
+    if (!ano || !marca || !modelo || !placa) {
+      setErro('Todos os campos devem ser preenchidos.');
+      return;
     }
     const veiculoComEmail = {
       ...veiculo,
-      email: user?.email, // Adiciona o email do usuário
+      email: user?.email,
     };
-    const cabecalho={
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body: JSON.stringify(veiculoComEmail)}
+    const cabecalho = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(veiculoComEmail)
+    }
     try {
-      const response = await fetch("http://localhost:8080/veiculos/cadastrar",cabecalho)
-        if(response.ok){
-          alert(`${veiculo.modelo} cadastrado com sucesso!`)
-          setVeiculo({ano: 0,
-            marca: "",
-            modelo: "",
-            placa: ""})
-            const response = await fetch(`http://localhost:8080/veiculos/listar/${user?.email}`);
-            const data: VeiculoProps[] = await response.json();
-            setVeiculos(data);
-        }else{
-          console.log(await response.text()); // Verifique a resposta como texto
-          console.log(user?.email)
-          const errorData = await response.json(); // Captura a resposta de erro
-          console.error("Erro ao cadastrar:", errorData);
-        }
-        } catch (err) {
-          console.error(err);
-        }
-    };
+      const response = await fetch("http://localhost:8080/veiculos/cadastrar", cabecalho)
+      if (response.ok) {
+        alert(`${veiculo.modelo} cadastrado com sucesso!`)
+        setVeiculo({
+          ano: 0,
+          marca: "",
+          modelo: "",
+          placa: ""
+        })
+        const response = await fetch(`http://localhost:8080/veiculos/listar/${user?.email}`);
+        const data: VeiculoProps[] = await response.json();
+        setVeiculos(data);
+        setErro(undefined); // Clear any previous errors
+      } else {
+        console.log(await response.text());
+        console.log(user?.email)
+        const errorData = await response.json();
+        console.error("Erro ao cadastrar:", errorData);
+        setErro("Erro ao cadastrar o veículo. Por favor, tente novamente.");
+      }
+    } catch (err) {
+      console.error(err);
+      setErro("Ocorreu um erro ao processar sua solicitação. Por favor, tente novamente.");
+    }
+  };
 
   return (
     <section className="grid grid-cols-1 md:grid-cols-2 gap-8 p-8">
@@ -116,15 +123,15 @@ export default function Conta() {
         <header className="text-lg font-bold mb-4">Perfil</header>
         <form className="flex flex-col">
           <label>Nome Completo</label>
-          <input type="text" placeholder={user?.userName} className="p-2 border rounded mb-2" value={user?.userName} readonly/>
+          <input type="text" placeholder={user?.userName} className="p-2 border rounded mb-2" value={user?.userName} readOnly />
           <label>Cep</label>
-          <input type="text" placeholder={user?.cep} className="p-2 border rounded mb-2" value={user?.cep} readonly/>
+          <input type="text" placeholder={user?.cep} className="p-2 border rounded mb-2" value={user?.cep} readOnly />
           <label>Telefone</label>
-          <input type="tel" placeholder={user?.telefone} className="p-2 border rounded mb-2" value={user?.telefone} readonly/>
+          <input type="tel" placeholder={user?.telefone} className="p-2 border rounded mb-2" value={user?.telefone} readOnly />
           <label>Email</label>
-          <input type="email" placeholder={user?.email} className="p-2 border rounded mb-2"value={user?.email} readonly/>
+          <input type="email" placeholder={user?.email} className="p-2 border rounded mb-2" value={user?.email} readOnly />
           <label>Senha</label>
-          <input type="password" placeholder={user?.senha} className="p-2 border rounded mb-4" value={user?.senha} readonly/>
+          <input type="password" placeholder="********" className="p-2 border rounded mb-4" value="********" readOnly />
           <Link href="/">
             <button type="button" className="bg-blue-500 text-white p-2 rounded w-full" onClick={logout}>
               Sair
@@ -136,11 +143,47 @@ export default function Conta() {
       <section className="p-6 bg-white rounded-lg shadow">
         <header className="text-lg font-bold mb-4">Carro</header>
         <form className="flex flex-col" onSubmit={handleSubmit}>
-        <div id="erro" className="text-red-500 mt-2">{erro || error}</div>
-          <input type="text" id="Marca" name="marca" placeholder="Marca" className="p-2 border rounded mb-2" onChange={handleChange}/>
-          <input type="text" id="Modelo" name="modelo" placeholder="Modelo" className="p-2 border rounded mb-2" onChange={handleChange}/>
-          <input type="text" id="Placa" name="placa" minLength={7} maxLength={7} placeholder="Placa" className="p-2 border rounded mb-2" onChange={handleChange}/>
-          <input type="text" id="Ano" name="ano" minLength={4} maxLength={4} placeholder="Ano" className="p-2 border rounded mb-4" onChange={handleChange}/>
+          <div id="erro" className="text-red-500 mt-2">{erro || error}</div>
+          <input
+            type="text"
+            id="Marca"
+            name="marca"
+            placeholder="Marca"
+            className="p-2 border rounded mb-2"
+            onChange={handleChange}
+            value={veiculo.marca}
+          />
+          <input
+            type="text"
+            id="Modelo"
+            name="modelo"
+            placeholder="Modelo"
+            className="p-2 border rounded mb-2"
+            onChange={handleChange}
+            value={veiculo.modelo}
+          />
+          <input
+            type="text"
+            id="Placa"
+            name="placa"
+            minLength={7}
+            maxLength={7}
+            placeholder="Placa"
+            className="p-2 border rounded mb-2"
+            onChange={handleChange}
+            value={veiculo.placa}
+          />
+          <input
+            type="number"
+            id="Ano"
+            name="ano"
+            minLength={4}
+            maxLength={4}
+            placeholder="Ano"
+            className="p-2 border rounded mb-4"
+            onChange={handleChange}
+            value={veiculo.ano === 0 ? "" : veiculo.ano}
+          />
           <input
             type="submit"
             value="Adicionar"
