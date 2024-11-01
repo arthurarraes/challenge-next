@@ -116,15 +116,15 @@ export default function Conta() {
         <header className="text-lg font-bold mb-4">Perfil</header>
         <form className="flex flex-col">
           <label>Nome Completo</label>
-          <input type="text" placeholder={user?.userName} className="p-2 border rounded mb-2" value={user?.userName}/>
+          <input type="text" placeholder={user?.userName} className="p-2 border rounded mb-2" value={user?.userName} readonly/>
           <label>Cep</label>
-          <input type="text" placeholder={user?.cep} className="p-2 border rounded mb-2" value={user?.cep}/>
+          <input type="text" placeholder={user?.cep} className="p-2 border rounded mb-2" value={user?.cep} readonly/>
           <label>Telefone</label>
-          <input type="tel" placeholder={user?.telefone} className="p-2 border rounded mb-2" value={user?.telefone}/>
+          <input type="tel" placeholder={user?.telefone} className="p-2 border rounded mb-2" value={user?.telefone} readonly/>
           <label>Email</label>
-          <input type="email" placeholder={user?.email} className="p-2 border rounded mb-2"value={user?.email}/>
+          <input type="email" placeholder={user?.email} className="p-2 border rounded mb-2"value={user?.email} readonly/>
           <label>Senha</label>
-          <input type="password" placeholder={user?.senha} className="p-2 border rounded mb-4" value={user?.senha}/>
+          <input type="password" placeholder={user?.senha} className="p-2 border rounded mb-4" value={user?.senha} readonly/>
           <Link href="/">
             <button type="button" className="bg-blue-500 text-white p-2 rounded w-full" onClick={logout}>
               Sair
